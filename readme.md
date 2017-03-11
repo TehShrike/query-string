@@ -18,33 +18,40 @@ $ npm install --save query-string
 
 ## Usage
 
+<!--js
+const realRequire = require
+require = () => realRequire('./')
+const location = {
+	searchString: '?foo=bar',
+	hash: '#token=bada55cafe',
+	set search(str) {
+		this.searchString = '?' + str
+	},
+	get search() {
+		return this.searchString
+	}
+}
+-->
+
 ```js
 const queryString = require('query-string');
 
-console.log(location.search);
-//=> '?foo=bar'
+location.search; //=> '?foo=bar'
 
-const parsed = queryString.parse(location.search);
-console.log(parsed);
-//=> {foo: 'bar'}
+const parsed = queryString.parse(location.search); //=> {foo: 'bar'}
 
-console.log(location.hash);
-//=> '#token=bada55cafe'
+location.hash; //=> '#token=bada55cafe'
 
-const parsedHash = queryString.parse(location.hash);
-console.log(parsedHash);
-//=> {token: 'bada55cafe'}
+queryString.parse(location.hash); //=> {token: 'bada55cafe'}
 
 parsed.foo = 'unicorn';
 parsed.ilike = 'pizza';
 
-const stringified = queryString.stringify(parsed);
-//=> 'foo=unicorn&ilike=pizza'
+const stringified = queryString.stringify(parsed); //=> 'foo=unicorn&ilike=pizza'
 
 location.search = stringified;
 // note that `location.search` automatically prepends a question mark
-console.log(location.search);
-//=> '?foo=unicorn&ilike=pizza'
+location.search; //=> '?foo=unicorn&ilike=pizza'
 ```
 
 
@@ -66,22 +73,19 @@ Supports both `index` for an indexed array representation or `bracket` for a *br
 - `bracket`: stands for parsing correctly arrays with bracket representation on the query string, such as:
 
 ```js
-queryString.parse('foo[]=1&foo[]=2&foo[]=3', {arrayFormat: 'bracket'});
-//=> foo: [1,2,3]
+queryString.parse('foo[]=1&foo[]=2&foo[]=3', {arrayFormat: 'bracket'}); //=> {foo: [1,2,3]}
 ```
 
 - `index`: stands for parsing taking the index into account, such as:
 
 ```js
-queryString.parse('foo[0]=1&foo[1]=2&foo[3]=3', {arrayFormat: 'index'});
-//=> foo: [1,2,3]
+queryString.parse('foo[0]=1&foo[1]=2&foo[3]=3', {arrayFormat: 'index'}); //=> {foo: [1,2,3]}
 ```
 
 - `none`: is the **default** option and removes any bracket representation, such as:
 
 ```js
-queryString.parse('foo=1&foo=2&foo=3');
-//=> foo: [1,2,3]
+queryString.parse('foo=1&foo=2&foo=3'); //=> {foo: [1,2,3]}
 ```
 
 ### .stringify(*object*, *[options]*)
@@ -113,22 +117,19 @@ Supports both `index` for an indexed array representation or `bracket` for a *br
 - `bracket`: stands for parsing correctly arrays with bracket representation on the query string, such as:
 
 ```js
-queryString.stringify({foo: [1,2,3]}, {arrayFormat: 'bracket'});
-// => foo[]=1&foo[]=2&foo[]=3
+queryString.stringify({foo: [1,2,3]}, {arrayFormat: 'bracket'}); //=> 'foo[]=1&foo[]=2&foo[]=3'
 ```
 
 - `index`: stands for parsing taking the index into account, such as:
 
 ```js
-queryString.stringify({foo: [1,2,3]}, {arrayFormat: 'index'});
-// => foo[0]=1&foo[1]=2&foo[3]=3
+queryString.stringify({foo: [1,2,3]}, {arrayFormat: 'index'}); //=> 'foo[0]=1&foo[1]=2&foo[2]=3'
 ```
 
 - `none`: is the __default__ option and removes any bracket representation, such as:
 
 ```js
-queryString.stringify({foo: [1,2,3]});
-// => foo=1&foo=2&foo=3
+queryString.stringify({foo: [1,2,3]}); //=> 'foo=1&foo=2&foo=3'
 ```
 
 ### .extract(*string*)
@@ -148,18 +149,15 @@ queryString.stringify({
 	nested: JSON.stringify({
 		unicorn: 'cake'
 	})
-});
-//=> 'foo=bar&nested=%7B%22unicorn%22%3A%22cake%22%7D'
+}); //=> 'foo=bar&nested=%7B%22unicorn%22%3A%22cake%22%7D'
 ```
 
 However, there is support for multiple instances of the same key:
 
 ```js
-queryString.parse('likes=cake&name=bob&likes=icecream');
-//=> {likes: ['cake', 'icecream'], name: 'bob'}
+queryString.parse('likes=cake&name=bob&likes=icecream'); //=> {likes: ['cake', 'icecream'], name: 'bob'}
 
-queryString.stringify({color: ['taupe', 'chartreuse'], id: '515'});
-//=> 'color=chartreuse&color=taupe&id=515'
+queryString.stringify({color: ['taupe', 'chartreuse'], id: '515'}); //=> 'color=taupe&color=chartreuse&id=515'
 ```
 
 
@@ -168,14 +166,11 @@ queryString.stringify({color: ['taupe', 'chartreuse'], id: '515'});
 Sometimes you want to unset a key, or maybe just make it present without assigning a value to it. Here is how falsy values are stringified:
 
 ```js
-queryString.stringify({foo: false});
-//=> 'foo=false'
+queryString.stringify({foo: false}); //=> 'foo=false'
 
-queryString.stringify({foo: null});
-//=> 'foo'
+queryString.stringify({foo: null}); //=> 'foo'
 
-queryString.stringify({foo: undefined});
-//=> ''
+queryString.stringify({foo: undefined}); //=> ''
 ```
 
 
